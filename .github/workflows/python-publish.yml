@@ -1,0 +1,78 @@
+name: Upload Python Package
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+
+  publish-pypi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      # 构建和发布
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+          ls dist/
+      
+      # 使用shell脚本来找到第一个.tar.gz文件并提取版本号  
+      - name: Extract version from first tar.gz file  
+        id: extract_version  
+        run: |  
+          cd dist
+          first_tar_gz=$(find . -maxdepth 1 -type f -name "*.tar.gz" | head -n 1)  
+          if [ -z "$first_tar_gz" ]; then  
+            echo "No .tar.gz files found in the current directory."  
+            exit 1  
+          fi  
+          VERSION=$(basename "$first_tar_gz" | sed 's/.*-\([0-9.]*\)\.tar\.gz$/\1/')  
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.API_PAT }}
+        with:
+          tag_name: ${{ steps.extract_version.outputs.version }}
+          release_name: crypto_js_to_py-${{ steps.extract_version.outputs.version }}
+          draft: false
+          prerelease: false
+      
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.API_PAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/crypto-js-to-py-${{ steps.extract_version.outputs.version }}.tar.gz
+          asset_name: crypto-js-to-py-${{ steps.extract_version.outputs.version }}.tar.gz
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset WHL
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN:  ${{ secrets.API_PAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/crypto_js_to_py-${{ steps.extract_version.outputs.version }}-py3-none-any.whl
+          asset_name: crypto_js_to_py-${{ steps.extract_version.outputs.version }}-py3-none-any.whl
+          asset_content_type: application/octet-stream
