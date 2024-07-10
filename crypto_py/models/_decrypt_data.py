@@ -18,10 +18,14 @@ import base64
 import binascii
 
 from ..enc.enc import Utf8
+from ..pad.pad import Pad
 
 
 class DecryptData:
-    def __init__(self, _cipher: AES, data: str, _padding: Callable):
+    """
+
+    """
+    def __init__(self, _cipher: AES, data: str, _padding: Pad):
         self._data = data
         self._padding = _padding
         self.__cipher = _cipher
@@ -29,12 +33,12 @@ class DecryptData:
     def decode(self) -> bytes:
         data = Utf8.parse(self._data)
         decrypted_data = self.__cipher.decrypt(base64.decodebytes(data))
-        return self._padding(decrypted_data, True).decode()
+        return self._padding.pad(decrypted_data).decode()
 
     @property
     def ciphertext(self) -> bytes:
         decrypted_data = self.__cipher.decrypt(binascii.unhexlify(self._data))
-        return self._padding(decrypted_data, True)
+        return self._padding.pad(decrypted_data)
 
     def __str__(self) -> str:
-        return f"<class DecryptData data:'{self._data}'>"
+        return f"<class DecryptData data:'{self._data[:10]}'>"

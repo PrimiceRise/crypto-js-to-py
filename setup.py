@@ -26,5 +26,6 @@ setuptools.setup(
     ],
     install_requires=[  # 依赖列表
        "pycryptodomex",
+       "pydantic"
     ]
 )

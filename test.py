@@ -13,7 +13,7 @@
 
 # -------------------------------
 
-# from crypto_py import CryptoPY as CryptoJS
+from crypto_py import CryptoPY as CryptoJS
 #
 # key = CryptoJS.enc.Utf8.parse("1234567890123456")
 # iv = CryptoJS.enc.Utf8.parse("1234567890123456")
@@ -36,6 +36,7 @@ from crypto_py.models._sm4_options import SM4Options
 #     mode=SMPY.mode.CBC,
 #     padding=SMPY.pad.Pkcs7
 # ))
-res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!','CBC','Pkcs7','Wwcd@2016@03VI#!')
-
-print(res.decode())
+# res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!','CBC','Pkcs7','Wwcd@2016@03VI#!')
+#
+# print(res.decode())
+# print(res.decode() == "pA2jnet+j76kbwIvwNu9yw==")
