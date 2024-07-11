@@ -12,11 +12,12 @@
 # @author：Primice
 
 # -------------------------------
-from pydantic import BaseModel,Field
-from typing import Callable,Optional
+from pydantic import BaseModel, Field
+from typing import Optional, Type
+from ..pad.pad import Pad
 
 
-class AESOption(BaseModel):
+class Options(BaseModel):
     mode: int
-    padding: Callable
-    iv: Optional[bytes] = Field(default=None)
+    padding: Type[Pad]
+    iv: Optional[bytes | str] = Field(default=None)
