@@ -16,6 +16,11 @@ import binascii
 import base64
 
 class EncryptData:
+    """AES密文的对象
+
+    因为实例化时传进来的值已经是密文，因此decode()和ciphertext只做编码过程
+
+    """
     def __init__(self, encrypted_data):
         self.encrypted_data = encrypted_data
 
