@@ -29,8 +29,9 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           python setup.py sdist bdist_wheel
-          twine upload dist/*
           ls dist/
+          twine upload dist/*
+          
       
       # 使用shell脚本来找到第一个.tar.gz文件并提取版本号  
       - name: Extract version from first tar.gz file  
