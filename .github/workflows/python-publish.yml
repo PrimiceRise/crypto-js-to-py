@@ -36,8 +36,6 @@ jobs:
       - name: pypi-publish
         uses: pypa/gh-action-pypi-publish@v1.9.0    
         with:
-          password: ${{ secrets.PYPI_TOKEN }}
-          user: __token__
           packages-dir: dist/
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
