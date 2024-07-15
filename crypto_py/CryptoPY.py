@@ -12,4 +12,4 @@ from .AES._aes import AES
 from .mode import mode
 from .pad import pad
 from .enc import enc
-from .models._aes_options import AESOption
+from .models._options import Options

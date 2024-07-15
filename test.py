@@ -1,41 +1,86 @@
-# -*- coding: utf-8 -*-
-# -------------------------------
+from crypto_py import SMPY, CryptoPY
 
-# @IDE：PyCharm
-# @Python：3.12
-# @Project：DP
+""" 
+AES 示例
+"""
 
-# -------------------------------
+data = "如意如意，按我心意，快快显灵"
 
-# @fileName：test.py
-# @createTime：2024/7/3 10:12
-# @author：Primice
-
-# -------------------------------
-
-# from crypto_py import CryptoPY as CryptoJS
-#
-# key = CryptoJS.enc.Utf8.parse("1234567890123456")
-# iv = CryptoJS.enc.Utf8.parse("1234567890123456")
-# data = "我是帅哥"
-#
-# encrypt = CryptoJS.AES.encrypt(data,key,{
-#     "iv": iv,
-#     "mode":CryptoJS.mode.CBC,
-#     "padding":CryptoJS.pad.Pkcs7
-# })
-#
-# print(encrypt.decode())
+AESkey = "This_is_a_key!!!"
+AESiv = "This_is_a_iv_!!!"
 
 
-from crypto_py import SMPY
-from crypto_py.models._sm4_options import SM4Options
+# AES ECB MODE
+def aes_ecb():
+    key = CryptoPY.enc.Utf8.parse(AESkey)
 
-# res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!',SM4Options(
-#     iv='Wwcd@2016@03VI#!',
-#     mode=SMPY.mode.CBC,
-#     padding=SMPY.pad.Pkcs7
-# ))
-res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!','CBC','Pkcs7','Wwcd@2016@03VI#!')
+    options = CryptoPY.Options(
+        mode=CryptoPY.mode.ECB,
+        padding=CryptoPY.pad.Pkcs7
+    )
+    encrypted = CryptoPY.AES.encrypt(data, key, options)
+    cipher = encrypted.ciphertext
+    print(encrypted.decode())
+    print(cipher.decode())
 
-print(res.decode())
+    decrypt = CryptoPY.AES.decrypt(encrypted.decode(), key, {
+        "mode": CryptoPY.mode.ECB,
+        "padding": CryptoPY.pad.Pkcs7
+    })
+    cipher_decrypt = CryptoPY.AES.decrypt(cipher.decode(), key, "ECB", "Pkcs7").ciphertext
+    print(decrypt.decode())
+    print(cipher_decrypt.decode())
+
+
+# AES CBC MODE
+def aes_cbc():
+    key = CryptoPY.enc.Utf8.parse(AESkey)
+    iv = CryptoPY.enc.Utf8.parse(AESiv)
+
+    options = CryptoPY.Options(
+        iv=iv,
+        mode=CryptoPY.mode.CBC,
+        padding=CryptoPY.pad.Pkcs7
+    )
+    encrypted = CryptoPY.AES.encrypt(data, key, options)
+    cipher = encrypted.ciphertext
+    print(encrypted.decode())
+    print(cipher.decode())
+
+    decrypt = CryptoPY.AES.decrypt(encrypted.decode(), key, {
+        "iv": iv,
+        "mode": CryptoPY.mode.CBC,
+        "padding": CryptoPY.pad.Pkcs7
+    })
+    cipher_decrypt = CryptoPY.AES.decrypt(cipher.decode(), key, "CBC", "Pkcs7", iv).ciphertext
+    print(decrypt.decode())
+    print(cipher_decrypt.decode())
+
+
+# SM4
+def sm4_test():
+
+    options = CryptoPY.Options(
+        iv=AESiv,
+        mode=CryptoPY.mode.CBC,
+        padding=CryptoPY.pad.Pkcs7
+    )
+    encrypted = SMPY.SM4.encrypt(data, AESkey, options)
+    print(encrypted.decode())
+
+
+    decrypt = SMPY.SM4.decrypt(encrypted.decode(), AESkey, "CBC", "Pkcs7", AESiv)
+    print(decrypt.decode())
+
+    encrypted = SMPY.SM4.encrypt(data, AESkey, {
+        "mode": SMPY.mode.ECB,
+        "padding": SMPY.pad.Pkcs7
+    }).decode()
+    print(encrypted)
+    decrypted = SMPY.SM4.decrypt(encrypted,AESkey, {
+        "mode": SMPY.mode.ECB,
+        "padding": SMPY.pad.Pkcs7
+    }).decode()
+    print(decrypted)
+
+sm4_test()

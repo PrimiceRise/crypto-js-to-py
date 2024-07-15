@@ -12,25 +12,45 @@
 # @author：Primice
 
 # -------------------------------
+from abc import ABC, abstractmethod
 
 
-def Pkcs7(_data: bytes | list, _unpad: bool = False, block_size: int = 16) -> list | bytes:
-    if _unpad:
+class Pad(ABC):
+    @staticmethod
+    @abstractmethod
+    def pad(self):
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def unpad(self):
+        pass
+
+
+class Pkcs7(Pad):
+    @staticmethod
+    def pad(_data, block_size: int = 16):
+        padding_length = block_size - len(_data) % block_size
+        if isinstance(_data, list):
+            return _data + [padding_length] * padding_length
+        return _data + bytes([padding_length] * padding_length)
+
+    @staticmethod
+    def unpad(_data):
         return _data[:-_data[-1]]
 
-    padding_length = block_size - len(_data) % block_size
-    if isinstance(_data, list):
-        return _data + [padding_length] * padding_length
-    return _data + bytes([padding_length] * padding_length)
 
-def NoPadding(_data: bytes | list, _unpad: bool = False, block_size: int = 16) -> list | bytes:
-    if _unpad:
+class NoPadding(Pad):
+    @staticmethod
+    def pad(_data, block_size: int = 16):
+        padding_length = block_size - len(_data) % block_size
+
+        if isinstance(_data, list):
+            return _data + [0] * padding_length
+        return _data + padding_length * b'\0'
+
+    @staticmethod
+    def unpad(_data):
         if isinstance(_data, list):
             return _data[:_data.index(0)]
         return _data.rstrip('\0')
-
-    padding_length = block_size - len(_data) % block_size
-
-    if isinstance(_data, list):
-        return _data + [0] * padding_length
-    return _data + (padding_length) * b'\0'
