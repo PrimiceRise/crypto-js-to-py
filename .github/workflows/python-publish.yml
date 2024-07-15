@@ -23,8 +23,6 @@ jobs:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
     # retrieve your distributions here
-      - name: pypi-publish
-        uses: pypa/gh-action-pypi-publish@v1.9.0    
       - uses: actions/checkout@v4
       
       # 安装依赖
@@ -35,9 +33,11 @@ jobs:
       - name: build dist
         run: |
           python setup.py sdist bdist_wheel
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: pypi-publish
+        uses: pypa/gh-action-pypi-publish@v1.9.0    
         with:
+          username: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
           user: Primice
           packages-dir: dist/
           repository-url: https://test.pypi.org/legacy/
