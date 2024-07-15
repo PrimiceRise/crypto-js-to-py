@@ -25,3 +25,7 @@ EAX = 9
 SIV = 10
 GCM = 11
 OCB = 12
+
+def getmode(name):
+    return int(eval(name))
+

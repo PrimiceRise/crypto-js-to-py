@@ -52,12 +52,12 @@ class AESDecryptData:
     def decode(self) -> bytes:
         data = Utf8.parse(self._data)
         decrypted_data = self.__cipher.decrypt(base64.decodebytes(data))
-        return self.__padding.pad(decrypted_data).decode()
+        return self.__padding.unpad(decrypted_data).decode()
 
     @property
     def ciphertext(self) -> bytes:
         decrypted_data = self.__cipher.decrypt(binascii.unhexlify(self._data))
-        return self.__padding.pad(decrypted_data)
+        return self.__padding.unpad(decrypted_data)
 
     def __str__(self) -> str:
         return f"<class AESDecryptData data:'{self._data[:10]}'>"
