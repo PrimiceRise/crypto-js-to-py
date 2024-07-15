@@ -29,14 +29,22 @@ from crypto_py import CryptoPY as CryptoJS
 
 
 from crypto_py import SMPY
-from crypto_py.models._sm4_options import SM4Options
+from crypto_py.models._options import Options
 
-# res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!',SM4Options(
-#     iv='Wwcd@2016@03VI#!',
-#     mode=SMPY.mode.CBC,
+# res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!',Options(
+#     # iv='Wwcd@2016@03VI#!',
+#     mode=SMPY.mode.ECB,
 #     padding=SMPY.pad.Pkcs7
 # ))
-# res = SMPY.SM4.encrypt('123123','Wwcd@2016@0309#!','CBC','Pkcs7','Wwcd@2016@03VI#!')
-#
-# print(res.decode())
-# print(res.decode() == "pA2jnet+j76kbwIvwNu9yw==")
+res = SMPY.SM4.encrypt('哈哈 鬼剑士听我号令，砍','Wwcd@2016@0309#!','CBC','Pkcs7','Wwcd@2016@03VI#!')
+
+print(res.decode())
+print(res.decode() == "pA2jnet+j76kbwIvwNu9yw==")
+# print(res.decode() == "sBp0G8n72eOVDqmVVNbdpw==")
+
+res = SMPY.SM4.decrypt("8FTkO30gKrgND5D+L+tfIafM71K33Lqp66xxiUTEUmV55GimJVFqS9bPplvykITs",'Wwcd@2016@0309#!',Options(
+    iv='Wwcd@2016@03VI#!',
+    mode=SMPY.mode.CBC,
+    padding=SMPY.pad.Pkcs7
+))
+print(res.decode())

@@ -81,3 +81,16 @@ class AESEncryptData:
 
     def __str__(self) -> str:
         return f"<class EncryptData data:'{self.encrypted_data}'>"
+
+class SM4EncryptData:
+    def __init__(self, out_array: bytes | bytearray, decode_mode='base64'):
+        self.decode_mode = decode_mode
+        self._out_array = out_array
+
+    def decode(self):
+        # 密文数组转换为字符串
+        if self.decode_mode == 'base64':
+            return base64.b64encode(self._out_array).decode()
+        else:
+            # 文本模式
+            return bytes(self._out_array).decode()
