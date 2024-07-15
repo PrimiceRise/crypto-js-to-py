@@ -35,8 +35,11 @@ jobs:
           python setup.py sdist bdist_wheel
       - name: pypi-publish
         uses: pypa/gh-action-pypi-publish@v1.9.0    
+        env: 
+          name: pull_request
         with:
           packages-dir: dist/
+          password: ${{ secrets.PYPI_token }}
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
 
