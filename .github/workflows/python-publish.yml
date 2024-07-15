@@ -14,9 +14,17 @@ permissions:
 jobs:
 
   publish-pypi:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
-
+    environment:
+      name: pypi
+      url: https://pypi.org/p/<your-pypi-project-name>
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
+    # retrieve your distributions here
+      - name: pypi-publish
+        uses: pypa/gh-action-pypi-publish@v1.9.0    
       - uses: actions/checkout@v4
       
       # 安装依赖
@@ -24,17 +32,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
-
-      # 构建和发布
-      - name: Build and publish
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      - name: build dist
         run: |
           python setup.py sdist bdist_wheel
-          twine upload dist/*
-          ls dist/
-      
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
       # 使用shell脚本来找到第一个.tar.gz文件并提取版本号  
       - name: Extract version from first tar.gz file  
         id: extract_version  
