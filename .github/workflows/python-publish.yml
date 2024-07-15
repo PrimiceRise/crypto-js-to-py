@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<your-pypi-project-name>
+      url: https://pypi.org/p/crypto-js-to-py
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
@@ -40,6 +40,8 @@ jobs:
         with:
           user: Primice
           packages-dir: dist/
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
 
       # 使用shell脚本来找到第一个.tar.gz文件并提取版本号  
       - name: Extract version from first tar.gz file  
