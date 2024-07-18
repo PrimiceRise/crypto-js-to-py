@@ -41,13 +41,13 @@ from crypto_py import CryptoPY
     
       # 这里的options也可以通过对象的方式传入
       # options = CryptoJS.Options(
-
       #     iv=iv,
       #     mode=CryptoJS.mode.CBC,
       #     padding=CryptoJS.pad.Pkcs7
       # )
       # encrypt = CryptoJS.AES.encrypt(data,key,options).decode()
-
+    
+    
       encrypt = CryptoJS.AES.encrypt(data,key,{
           "iv": iv,
           "mode":CryptoJS.mode.CBC,
@@ -55,6 +55,8 @@ from crypto_py import CryptoPY
       }).decode()
     
       print(encrypt)
+
+      
       ```
 
 * 同时也支持NoPadding和ciphertext
