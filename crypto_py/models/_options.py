@@ -20,4 +20,4 @@ from ..pad.pad import Pad
 class Options(BaseModel):
     mode: int
     padding: Type[Pad]
-    iv: Optional[bytes | str] = Field(default=None)
+    iv: bytes | str = Field(default=None)
