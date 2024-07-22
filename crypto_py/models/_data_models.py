@@ -50,8 +50,24 @@ class AESDecryptData:
         self.__cipher = cipher
 
     def decode(self) -> bytes:
-        data = Utf8.parse(self._data)
-        decrypted_data = self.__cipher.decrypt(base64.decodebytes(data))
+
+        # 判断传入密文的数据类型
+        #   - 期望传入的 self._data 是str类型，但是有时会被错误的传入bytes类型
+        #   - 如果被错误的传入了bytes类型的值，尝试直接处理传入的值
+        if isinstance(self._data, str):
+            data = Utf8.parse(self._data)
+        else:
+            data = self._data
+
+
+        # 解密密文
+        #   - 由于base64编码有url安全类型('-','_')和普通base64编码('=','/')，需要尝试两种编码方式
+        #   - 首先尝试url安全编码方式，如果失败则尝试普通base64编码方式，因为这种方式解码失败会抛出错误
+        try:
+            decrypted_data = self.__cipher.decrypt(base64.urlsafe_b64decode(data))
+        except binascii.Error:
+            decrypted_data = self.__cipher.decrypt(base64.decodebytes(data))
+
         return self.__padding.unpad(decrypted_data).decode()
 
     @property
